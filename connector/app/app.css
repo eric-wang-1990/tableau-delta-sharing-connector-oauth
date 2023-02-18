@@ -16,3 +16,11 @@
 .card {
   margin: 20px;
 }
+
+.card-body {
+  overflow: auto;
+}
+
+.browser-card {
+  height: 400px;
+}

@@ -113,20 +113,29 @@ const ConnectorView = () => {
           </form>
         </div>
 
-        <div className="card">
+        <div className="card browser-card">
           <div className="card-header">
             Shares/Schemas/Tables
           </div>
           <div className="card-body">
-            <CheckboxTree
-              nodes={deltaShareStructure}
-              checked={checked}
-              expanded={expanded}
-              onlyLeafCheckboxes={true}
-              onCheck={uniqueSelection}
-              onExpand={expanded => setExpanded(expanded)}
-              iconsClass="fa5"
-              />
+            {
+              deltaShareStructure ? 
+              <CheckboxTree
+                nodes={deltaShareStructure}
+                checked={checked}
+                expanded={expanded}
+                onlyLeafCheckboxes={true}
+                onCheck={uniqueSelection}
+                onExpand={expanded => setExpanded(expanded)}
+                iconsClass="fa5"
+                />
+              :
+              <div className="d-flex justify-content-center">
+                <div className="spinner-border" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            }
 
           </div>
         </div>

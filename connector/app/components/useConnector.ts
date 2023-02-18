@@ -13,7 +13,7 @@ type ConnectorState = {
 
   url: string
   token: string
-  deltaShareStructure: Node[]
+  deltaShareStructure: Node[] | undefined
 }
 
 const useConnector = () => {
@@ -28,7 +28,7 @@ const useConnector = () => {
 
     url: '',
     token: '',
-    deltaShareStructure: [],
+    deltaShareStructure: undefined,
   })
 
   const onInitializedSuccess = (_connector: Connector) => {
