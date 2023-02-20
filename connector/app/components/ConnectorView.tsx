@@ -3,7 +3,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import React, { useState } from 'react'
 import CheckboxTree from 'react-checkbox-tree'
 import useConnector from './useConnector'
-import { Logger } from '@tableau/taco-toolkit'
+import { Logger } from '@tableau/taco-toolkit';
 
 const ConnectorView = () => {
   const { 
@@ -52,6 +52,11 @@ const ConnectorView = () => {
   }
   const onSendCreds = () => {
     handleCreds(creds.url, creds.bearerToken)
+    setCreds({
+      url: '',
+      bearerToken: '' 
+    })
+    Logger.info(sqlFilters)
   }
   const uniqueSelection = (selected: string[]) => {
     const diff = selected.filter(x => !checked.includes(x))
@@ -65,7 +70,6 @@ const ConnectorView = () => {
   if (!hasCreds) {
     return (
       <>
-        <p className="error"></p>
         <div className="box m-auto">
           <div className="card">
             <div className="card-header">
@@ -74,12 +78,10 @@ const ConnectorView = () => {
 
             <form className="card-body">
               <label htmlFor="url" className="form-label">URL</label>
-              <input name="url" onChange={credsInputHandler} value={creds.url} className="form-control mb-2" placeholder="URL">
-              </input>
+              <input key="url" onChange={credsInputHandler} value={creds.url} className="form-control mb-2" placeholder="URL"/>
 
               <label htmlFor="bearerToken" className="form-label">Bearer Token</label>
-              <input name="bearerToken" onChange={credsInputHandler} value={creds.bearerToken} className="form-control mb-3" placeholder="Bearer Token">
-              </input>
+              <input key="bearerToken" onChange={credsInputHandler} value={creds.bearerToken} className="form-control mb-3" placeholder="Bearer Token"/>
 
               <div className=" text-center">
                 <button type="button" className="btn btn-success" onClick={onSendCreds} disabled={isSubmitting}> 
@@ -106,10 +108,10 @@ const ConnectorView = () => {
           <form className="card-body">
             <label htmlFor="sqlFilter" className="form-label">SQL Filter</label>
             {/* TODO add support for multiple sqlFilters */}
-            <input name="sqlFilter" onChange={sqlInputHandler} value={sqlFilters[0]} className="form-control mb-2" placeholder="SQL query eg. date >= '2021-01-01'"/> 
+            <input key="sqlFilter" onChange={sqlInputHandler} value={sqlFilters[0]} className="form-control mb-2" placeholder="SQL query eg. date >= '2021-01-01'"/> 
 
             <label htmlFor="rowFilter" className="form-label">Row Limit</label>
-            <input name="rowFilter" onChange={rowLimitInputHandler} value={rowLimit} className="form-control mb-3" placeholder="Row limit eg. 234"/>
+            <input key="rowFilter" onChange={rowLimitInputHandler} value={rowLimit} className="form-control mb-3" placeholder="Row limit eg. 234"/>
           </form>
         </div>
 
