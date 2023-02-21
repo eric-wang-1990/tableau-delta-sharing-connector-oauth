@@ -39,9 +39,9 @@ Debug using terminal logs and console logs in browser (inspect element in chrome
 Debug using terminal logs and EPS logs. You can find EPS logs under a `Documents/My Tableau Repository/Logs/EPS`, which will have a bunch of folders with different hash strings for names. Sort these by time modified for the latest logs. Inside each of these there will be `Extractor.<hash string>.log`, and a `StaticServer.log` file. The extractor log file corresponds to nodejs runtime logs, and static server browser runtime logs
 
 ## Developer Notes
-
-The WDC lifecycle has two different runtime environments: the browser runtiime (Chrome) and NodeJS, with the `/app` and `/handlers` directories 
-managing them respectively. When working with Tableau's WDC SDK, only import `@tableau/taco-toolkit/handlers` in top-level files under `/handlers`.
+### Two Different Runtimes: two different SDKs
+The WDC lifecycle has two different runtime environments: the browser runtime (Chrome) and NodeJS, with the `/app` and `/handlers` directories 
+managing them respectively. When working with Tableau's WDC SDK, only import `@tableau/taco-toolkit/handlers` in top-level files under `/handlers`. Likewise, only import `@tableau/taco-toolkit/app` in top-level files under `/app`.
 
 eg. 
 
@@ -50,3 +50,8 @@ eg.
 `/handlers/utils/cannotUseHandlerImports.ts`
 
 Likewise, `@tableau/taco-toolkit/app` and the `/app` directory will follow the same rules.
+
+### Security Barriers
+"Node APIs are not available in the connector runtime environment (due to security reasons)". This means standard node imports such as `path` or `worker_threads` cannot be used.
+
+
