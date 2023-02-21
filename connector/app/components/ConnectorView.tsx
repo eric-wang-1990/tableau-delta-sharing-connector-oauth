@@ -56,7 +56,6 @@ const ConnectorView = () => {
       url: '',
       bearerToken: '' 
     })
-    Logger.info(sqlFilters)
   }
   const uniqueSelection = (selected: string[]) => {
     const diff = selected.filter(x => !checked.includes(x))

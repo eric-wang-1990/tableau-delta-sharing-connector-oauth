@@ -1,33 +1,19 @@
 {
-  "name": "delta-sharing-connector",
+  "name": "Delta Sharing Connector",
   "version": "1.0.0",
   "tableau-version": {
     "min": "2022.4"
   },
   "vendor": {
     "name": "Databricks",
-    "support-link": "https://databricks.com",
-    "email": "support@vendor-name.com"
+    "support-link": "https://help.databricks.com/",
+    "email": "help@databricks.com"
   },
   "permission": {
     "api": {
-      "https://*.usgs.gov/": [
+      "https://*": [
         "GET",
-        "POST",
-        "HEAD"
-      ],
-      "https://*.delta.io/": [
-        "GET",
-        "POST",
-        "HEAD"
-      ],
-      "https://*.amazonaws.com/": [
-        "GET"
-      ],
-      "https://*.your_token_url/": [
-        "GET",
-        "POST",
-        "HEAD"
+        "POST"
       ]
     }
   },
