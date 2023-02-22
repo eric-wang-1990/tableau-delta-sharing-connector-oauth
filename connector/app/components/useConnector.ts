@@ -100,14 +100,14 @@ const useConnector = () => {
       return
     }
 
-    try {
-      getDeltaShareStructure(connector, connectorState.url, connectorState.token).then((arr) => {
-        setConnectorState({ ...connectorState, deltaShareStructure: arr})
-      })
+    getDeltaShareStructure(connector, connectorState.url, connectorState.token).then((arr) => {
+      setConnectorState({ ...connectorState, deltaShareStructure: arr})
+    }).catch((error) => {
+      Logger.info(error.stack)
+      Logger.error(error.stack)
+      setConnectorState({ ...connectorState, errorMessage: error.message, isSubmitting: false, hasCreds: false}) 
+    })
 
-    } catch (error) {
-      setConnectorState({ ...connectorState, errorMessage: error.message, isSubmitting: false }) 
-    }
 
   }, [connectorState.hasCreds]) // on recieved creds
 

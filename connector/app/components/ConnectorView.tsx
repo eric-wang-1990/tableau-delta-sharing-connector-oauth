@@ -77,10 +77,10 @@ const ConnectorView = () => {
 
             <form className="card-body">
               <label htmlFor="url" className="form-label">URL</label>
-              <input key="url" onChange={credsInputHandler} value={creds.url} className="form-control mb-2" placeholder="URL"/>
+              <input key="url" name="url" onChange={credsInputHandler} value={creds.url} className="form-control mb-2" placeholder="URL"/>
 
               <label htmlFor="bearerToken" className="form-label">Bearer Token</label>
-              <input key="bearerToken" onChange={credsInputHandler} value={creds.bearerToken} className="form-control mb-3" placeholder="Bearer Token"/>
+              <input key="bearerToken" name="bearerToken" onChange={credsInputHandler} value={creds.bearerToken} className="form-control mb-3" placeholder="Bearer Token"/>
 
               <div className=" text-center">
                 <button type="button" className="btn btn-success" onClick={onSendCreds} disabled={isSubmitting}> 
@@ -90,9 +90,10 @@ const ConnectorView = () => {
             </form>
 
           </div>
-        </div>
 
-        {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+          {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+
+        </div>
       </>
     )
   }
