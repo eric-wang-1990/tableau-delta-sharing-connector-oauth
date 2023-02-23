@@ -11,7 +11,7 @@ type ConnectorState = {
   isInitializing: boolean
   hasCreds: boolean
 
-  url: string
+  endpoint: string
   token: string
   deltaShareStructure: Node[] | undefined
 }
@@ -26,7 +26,7 @@ const useConnector = () => {
     errorMessage: '',
     hasCreds: false,
 
-    url: '',
+    endpoint: '',
     token: '',
     deltaShareStructure: undefined,
   })
@@ -65,13 +65,13 @@ const useConnector = () => {
     setConnectorState({ ...connectorState, isSubmitting: true, handlerInputs: handlerInputs })
   }
 
-  const handleCreds = (url: string, token: string) => {
+  const handleCreds = (endpoint: string, token: string) => {
     const handlerInputs = [
       {
         fetcher: 'MyFetcher',
         parser: 'MyParser',
         data: {
-          url: url,
+          endpoint: endpoint,
         },
       },
     ]
@@ -83,7 +83,7 @@ const useConnector = () => {
       hasCreds: true,
       handlerInputs,
       secrets,
-      url,
+      endpoint,
       token,
     })
   }
@@ -100,7 +100,7 @@ const useConnector = () => {
       return
     }
 
-    getDeltaShareStructure(connector, connectorState.url, connectorState.token).then((arr) => {
+    getDeltaShareStructure(connector, connectorState.endpoint, connectorState.token).then((arr) => {
       setConnectorState({ ...connectorState, deltaShareStructure: arr})
     }).catch((error) => {
       Logger.info(error.stack)
