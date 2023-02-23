@@ -12,6 +12,7 @@ async function getResource(connector: Connector, url: string, token: string) {
     const { errCode, errMsg } = resp.body
     Logger.info("Err getting resource")
     Logger.info(resp)
+    Logger.error(resp)
     throw new Error(`Error Code: ${errCode}, Message: ${errMsg}`);
   }
 
@@ -23,7 +24,7 @@ invalid json resp: unsafe any type , catch resp err
 */
 export async function getShareNames (connector: Connector, base_url: string, token: string, maxResults=10) {
   var shareNames: string[]
-  var url = `${base_url}shares?maxResults=${maxResults}`
+  var url = `${base_url}/shares?maxResults=${maxResults}`
   var resp: AjaxResponse
   try {
     resp = await getResource(connector, url, token)
@@ -36,7 +37,7 @@ export async function getShareNames (connector: Connector, base_url: string, tok
   // check for additional pagination results
   var nextPageToken = resp.body.nextPageToken
   while (nextPageToken) {
-    url = `${base_url}shares?maxResults=${maxResults}&pageToken=${nextPageToken}`
+    url = `${base_url}/shares?maxResults=${maxResults}&pageToken=${nextPageToken}`
     try {
       resp = await getResource(connector, url, token)
     } catch (e) {
@@ -56,7 +57,7 @@ invalid json resp: unsafe any type
 */
 export async function getSchemaNames (connector: Connector, base_url: string, token: string, share: string, maxResults=10) {
   var schemaNames: string[]
-  var url = `${base_url}shares/${share}/schemas?maxResults=${maxResults}`
+  var url = `${base_url}/shares/${share}/schemas?maxResults=${maxResults}`
   var resp: AjaxResponse
   try {
     resp = await getResource(connector, url, token)
@@ -69,7 +70,7 @@ export async function getSchemaNames (connector: Connector, base_url: string, to
   // check for addtional pagination results
   var nextPageToken = resp.body.nextPageToken
   while (nextPageToken) {
-    url = `${base_url}shares/${share}/schemas?maxResults=${maxResults}&pageToken=${nextPageToken}`
+    url = `${base_url}/shares/${share}/schemas?maxResults=${maxResults}&pageToken=${nextPageToken}`
     try {
       resp = await getResource(connector, url, token)
     } catch (e) {
@@ -90,7 +91,7 @@ invalid json resp
 */
 export async function getTableNamesBySchema (connector: Connector, base_url: string, token: string, share: string, schema: string, maxResults=10) {
   var tableNames: string[]
-  var url = `${base_url}shares/${share}/schemas/${schema}/tables?maxResults=${maxResults}`
+  var url = `${base_url}/shares/${share}/schemas/${schema}/tables?maxResults=${maxResults}`
   var resp: AjaxResponse
   try {
     resp = await getResource(connector, url, token)
@@ -103,7 +104,7 @@ export async function getTableNamesBySchema (connector: Connector, base_url: str
   // check for additional pagination results
   var nextPageToken = resp.body.nextPageToken
   while (nextPageToken) {
-    url = `${base_url}shares/${share}/schemas/${schema}/tables?maxResults=${maxResults}&pageToken=${nextPageToken}`
+    url = `${base_url}/shares/${share}/schemas/${schema}/tables?maxResults=${maxResults}&pageToken=${nextPageToken}`
     try {
       resp = await getResource(connector, url, token)
     } catch (e) {

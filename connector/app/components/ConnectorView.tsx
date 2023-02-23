@@ -18,7 +18,7 @@ const ConnectorView = () => {
   } = useConnector()
   const [creds, setCreds] = useState({
     // remove this later
-    url: 'https://sharing.delta.io/delta-sharing/',
+    url: 'https://sharing.delta.io/delta-sharing',
     bearerToken: 'faaie590d541265bcab1f2de9813274bf233',
   })
   const [sqlFilters, setSqlFilters] = useState([] as string[])
@@ -72,7 +72,7 @@ const ConnectorView = () => {
         <div className="box m-auto">
           <div className="card">
             <div className="card-header">
-              Custom Auth Sample Connector
+              Sharing Server Credentials
             </div>
 
             <form className="card-body">
@@ -82,13 +82,12 @@ const ConnectorView = () => {
               <label htmlFor="bearerToken" className="form-label">Bearer Token</label>
               <input key="bearerToken" name="bearerToken" onChange={credsInputHandler} value={creds.bearerToken} className="form-control mb-3" placeholder="Bearer Token"/>
 
-              <div className=" text-center">
-                <button type="button" className="btn btn-success" onClick={onSendCreds} disabled={isSubmitting}> 
-                  { isInitializing ? 'Initializing...' : (isSubmitting ? 'Loading tables...' : 'Get Data') }
-                </button>
-              </div>
             </form>
-
+          </div>
+          <div className=" text-center">
+            <button type="button" className="btn btn-success" onClick={onSendCreds} disabled={isSubmitting}> 
+              { isInitializing ? 'Initializing...' : (isSubmitting ? 'Loading tables...' : 'Get Data') }
+            </button>
           </div>
 
           {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
@@ -101,23 +100,9 @@ const ConnectorView = () => {
   return (
     <>
       <div className="box m-auto">
-        <div className="card">
-          <div className="card-header">
-            Filtering
-          </div>
-          <form className="card-body">
-            <label htmlFor="sqlFilter" className="form-label">SQL Filter</label>
-            {/* TODO add support for multiple sqlFilters */}
-            <input key="sqlFilter" onChange={sqlInputHandler} value={sqlFilters[0]} className="form-control mb-2" placeholder="SQL query eg. date >= '2021-01-01'"/> 
-
-            <label htmlFor="rowFilter" className="form-label">Row Limit</label>
-            <input key="rowFilter" onChange={rowLimitInputHandler} value={rowLimit} className="form-control mb-3" placeholder="Row limit eg. 234"/>
-          </form>
-        </div>
-
         <div className="card browser-card">
           <div className="card-header">
-            Shares/Schemas/Tables
+            Data Explorer
           </div>
           <div className="card-body">
             {
@@ -140,6 +125,20 @@ const ConnectorView = () => {
             }
 
           </div>
+        </div>
+
+        <div className="card">
+          <div className="card-header">
+            Filtering
+          </div>
+          <form className="card-body">
+            <label htmlFor="sqlFilter" className="form-label">SQL Filter</label>
+            {/* TODO add support for multiple sqlFilters */}
+            <input key="sqlFilter" onChange={sqlInputHandler} value={sqlFilters[0]} className="form-control mb-2" placeholder="eg. date >= '2021-01-01' AND magnitude <= 5.3"/> 
+
+            <label htmlFor="rowFilter" className="form-label">Row Limit</label>
+            <input key="rowFilter" onChange={rowLimitInputHandler} value={rowLimit} className="form-control mb-3" placeholder="eg. 234"/>
+          </form>
         </div>
 
         <div className="text-center">

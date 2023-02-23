@@ -105,7 +105,7 @@ const useConnector = () => {
     }).catch((error) => {
       Logger.info(error.stack)
       Logger.error(error.stack)
-      setConnectorState({ ...connectorState, errorMessage: error.message, isSubmitting: false, hasCreds: false}) 
+      setConnectorState({ ...connectorState, errorMessage: error.stack, isSubmitting: false, hasCreds: false}) 
     })
 
 

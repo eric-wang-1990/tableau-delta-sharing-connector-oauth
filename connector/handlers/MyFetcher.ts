@@ -10,7 +10,7 @@ async function getTableMetadata (
   sqlFilters: string[],
   rowLimit: Number
 ){
-  const url = `${base_url}shares/${share}/schemas/${schema}/tables/${table}/query`
+  const url = `${base_url}/shares/${share}/schemas/${schema}/tables/${table}/query`
   const headers = getAuthHeader(token)
   // add filtering properties to request body if they exist
   const body = {
