@@ -2,7 +2,7 @@ import { DataContainer, log, ParseOptions, AsyncParser, DataTable } from '@table
 
 export default class MyParser extends AsyncParser {
   async parse(fetcherResult: DataTable, { dataContainer }: ParseOptions): Promise<DataContainer> {
-    log(`Parser called for ${fetcherResult.name}`)
+    log(`parsing started for '${fetcherResult.name}'`)
     const containerBuilder = AsyncParser.createContainerBuilder(dataContainer)
     const { isNew, tableBuilder } = containerBuilder.getTable(fetcherResult.name)
     if (isNew) {
