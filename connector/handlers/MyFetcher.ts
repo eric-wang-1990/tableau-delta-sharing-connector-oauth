@@ -1,5 +1,12 @@
 import { 
-  Fetcher, FetchOptions, FetchUtils, ParquetUtils, getAuthHeader, DataTable, log } from '@tableau/taco-toolkit/handlers'
+  Fetcher,
+  FetchOptions,
+  FetchUtils,
+  ParquetUtils,
+  getAuthHeader,
+  DataTable,
+  log
+} from '@tableau/taco-toolkit/handlers'
 
 async function getTableMetadata (
   base_url: string,
@@ -61,12 +68,10 @@ async function getDataTables(fileDataObjArr: any[], table: string) {
     }
   
     // populate arr with promises resolving -> getting the resourceBinary + parsing to dataTable
-    const tableName = `${table} DataTable ${i}`
-    //const resourceBinaryPromise = FetchUtils.fetchArrayBuffer(uri) // s3 doesn't need auth?
-    //const dataTablePromise = ParquetUtils.parse(resourceBinary, tableName)
+    // const tableName = `${table} DataTable ${i}`
     const resourceBinaryPromise = FetchUtils.fetchArrayBuffer(uri) // s3 doesn't need auth?
     const dataTablePromise = resourceBinaryPromise.then(
-      (resourceBinary) => ParquetUtils.parse(resourceBinary, tableName)
+      (resourceBinary) => ParquetUtils.parse(resourceBinary, table)
     )
 
     dataTablePromises.push(dataTablePromise)
