@@ -1,13 +1,10 @@
-import { DataContainer, DataType, log, ParseOptions, AsyncParser, DataTableBuilder, DataTable } from '@tableau/taco-toolkit/handlers'
+import { DataContainer, DataTable, log, ParseOptions, AsyncParser } from '@tableau/taco-toolkit/handlers'
 
 export default class MyParser extends AsyncParser {
   async parse(fetcherResult: DataTable, { dataContainer }: ParseOptions): Promise<DataContainer> {
-    log(`Parser called for ${fetcherResult.name}`)
+    log(`parsing started for '${fetcherResult.name}'`)
     const containerBuilder = AsyncParser.createContainerBuilder(dataContainer)
-    const { isNew, tableBuilder } = containerBuilder.getTable(fetcherResult.name)
-    log(fetcherResult.rows.length)
-    tableBuilder.addRows(fetcherResult.rows)
-
+    containerBuilder.appendTable(fetcherResult)
     return containerBuilder.getDataContainer()
   }
 }
