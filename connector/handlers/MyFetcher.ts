@@ -16,7 +16,7 @@ async function getTableMetadata (
   table: string,
   sqlFilters: string[],
   rowLimit: Number
-){
+): Promise<any[]> {
   const url = `${base_url}/shares/${share}/schemas/${schema}/tables/${table}/query`
   const headers = getAuthHeader(token)
   // add filtering properties to request body if they exist
@@ -51,13 +51,13 @@ async function getTableMetadata (
 /*
 gets s3 files in parallel from file metadata arr. TODO replace any type with safer custon JSON object
 */
-async function getDataTables(fileDataObjArr: any[], table: string) {
-  let dataTablePromises = [] as Promise<DataTable>[]
+async function getDataTables(fileDataObjArr: any[], table: string): Promise<DataTable[]> {
+  var dataTablePromises = [] as Promise<DataTable>[]
 
   // get s3 files 
   for (let i = 0; i < fileDataObjArr.length; i++) {
     const dataObj = fileDataObjArr[i]
-    let uri = null 
+    var uri = null 
   
     if (dataObj.metaData) { // metadata
   
@@ -76,10 +76,8 @@ async function getDataTables(fileDataObjArr: any[], table: string) {
     dataTablePromises.push(dataTablePromise)
   }
   
-  return await Promise.all(dataTablePromises)
+  return Promise.all(dataTablePromises)
 }
-
-
 
 export default class MyFetcher extends Fetcher {
   async *fetch({ handlerInput, secrets }: FetchOptions) {

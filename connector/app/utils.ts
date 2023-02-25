@@ -25,8 +25,7 @@ invalid json resp: unsafe any type
 export async function getShareNames (connector: Connector, base_url: string, token: string, maxResults=10) {
   let shareNames: string[]
   let url = `${base_url}/shares?maxResults=${maxResults}`
-  let resp: AjaxResponse
-  resp = await getResource(connector, url, token)
+  let resp: AjaxResponse = await getResource(connector, url, token)
   shareNames = resp.body.items.map((shareObj: any) => shareObj.name)
 
   // check for additional pagination results
@@ -49,8 +48,7 @@ invalid json resp: unsafe any type
 export async function getSchemaNames (connector: Connector, base_url: string, token: string, share: string, maxResults=10) {
   let schemaNames: string[]
   let url = `${base_url}/shares/${share}/schemas?maxResults=${maxResults}`
-  let resp: AjaxResponse
-  resp = await getResource(connector, url, token)
+  let resp: AjaxResponse = await getResource(connector, url, token)
   schemaNames = resp.body.items.map((schemaObj: any) => schemaObj.name)
 
   // check for addtional pagination results
@@ -73,8 +71,7 @@ invalid json resp
 export async function getTableNamesBySchema (connector: Connector, base_url: string, token: string, share: string, schema: string, maxResults=10) {
   let tableNames: string[]
   let url = `${base_url}/shares/${share}/schemas/${schema}/tables?maxResults=${maxResults}`
-  let resp: AjaxResponse
-  resp = await getResource(connector, url, token)
+  let resp: AjaxResponse = await getResource(connector, url, token)
 
   tableNames = resp.body.items.map((tableObj: any) => tableObj.name)    
 
@@ -97,8 +94,7 @@ fetching and parsing is done naively in sequence
 */
 export async function getDeltaShareStructure (connector: Connector, base_url: string, token: string) {
   let Shares: Node[] = []
-  let shareNames: string[]
-  shareNames = await getShareNames(connector, base_url, token)
+  let shareNames: string[] = await getShareNames(connector, base_url, token)
 
   for (const share of shareNames) {
     let Schemas: Node[] = []
@@ -109,20 +105,20 @@ export async function getDeltaShareStructure (connector: Connector, base_url: st
       let tableNames: string[] 
       tableNames = await getTableNamesBySchema(connector, base_url, token, share, schemaName)
 
-      Schemas.push(<Node>{
+      Schemas.push({
         label: schemaName,
         value: schemaName,
         children: tableNames.map((tableName: string) => {
-          return <Node>{ label: tableName, value: tableName }
+          return { label: tableName, value: tableName } as Node
         }), 
-      })
+      } as Node)
     }
 
-    Shares.push(<Node>{
+    Shares.push({
       label: share,
       value: share,
       children: Schemas,
-    })
+    } as Node)
   }
 
   return Shares 
