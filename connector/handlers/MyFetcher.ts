@@ -57,7 +57,7 @@ async function getDataTables(fileDataObjArr: any[], table: string): Promise<Data
   // get s3 files 
   for (let i = 0; i < fileDataObjArr.length; i++) {
     const dataObj = fileDataObjArr[i]
-    let uri = null 
+    var uri = null 
   
     if (dataObj.metaData) { // metadata
   
