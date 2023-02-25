@@ -24,3 +24,6 @@ connector/.parcel-cache
 
 # runtime
 .eps
+
+# mac
+.DS_Store
