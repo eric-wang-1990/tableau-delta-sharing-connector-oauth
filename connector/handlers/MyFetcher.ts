@@ -52,12 +52,12 @@ async function getTableMetadata (
 gets s3 files in parallel from file metadata arr. TODO replace any type with safer custon JSON object
 */
 async function getDataTables(fileDataObjArr: any[], table: string) {
-  var dataTablePromises = [] as Promise<DataTable>[]
+  let dataTablePromises = [] as Promise<DataTable>[]
 
   // get s3 files 
   for (let i = 0; i < fileDataObjArr.length; i++) {
     const dataObj = fileDataObjArr[i]
-    var uri = null 
+    let uri = null 
   
     if (dataObj.metaData) { // metadata
   

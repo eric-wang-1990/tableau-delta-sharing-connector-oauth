@@ -3,7 +3,7 @@ import { Node } from 'react-checkbox-tree'
 
 async function getResource(connector: Connector, url: string, token: string) {
   const headers = {Authentication: `Bearer ${token}`}
-  var resp = await connector.get(url, {
+  let resp = await connector.get(url, {
     headers: headers,
     bypassCorsPolicy: true,
   })
@@ -23,14 +23,14 @@ async function getResource(connector: Connector, url: string, token: string) {
 invalid json resp: unsafe any type 
 */
 export async function getShareNames (connector: Connector, base_url: string, token: string, maxResults=10) {
-  var shareNames: string[]
-  var url = `${base_url}/shares?maxResults=${maxResults}`
-  var resp: AjaxResponse
+  let shareNames: string[]
+  let url = `${base_url}/shares?maxResults=${maxResults}`
+  let resp: AjaxResponse
   resp = await getResource(connector, url, token)
   shareNames = resp.body.items.map((shareObj: any) => shareObj.name)
 
   // check for additional pagination results
-  var nextPageToken = resp.body.nextPageToken
+  let nextPageToken = resp.body.nextPageToken
   while (nextPageToken) {
     url = `${base_url}/shares?maxResults=${maxResults}&pageToken=${nextPageToken}`
     resp = await getResource(connector, url, token)
@@ -47,14 +47,14 @@ export async function getShareNames (connector: Connector, base_url: string, tok
 invalid json resp: unsafe any type
 */
 export async function getSchemaNames (connector: Connector, base_url: string, token: string, share: string, maxResults=10) {
-  var schemaNames: string[]
-  var url = `${base_url}/shares/${share}/schemas?maxResults=${maxResults}`
-  var resp: AjaxResponse
+  let schemaNames: string[]
+  let url = `${base_url}/shares/${share}/schemas?maxResults=${maxResults}`
+  let resp: AjaxResponse
   resp = await getResource(connector, url, token)
   schemaNames = resp.body.items.map((schemaObj: any) => schemaObj.name)
 
   // check for addtional pagination results
-  var nextPageToken = resp.body.nextPageToken
+  let nextPageToken = resp.body.nextPageToken
   while (nextPageToken) {
     url = `${base_url}/shares/${share}/schemas?maxResults=${maxResults}&pageToken=${nextPageToken}`
     resp = await getResource(connector, url, token)
@@ -71,15 +71,15 @@ export async function getSchemaNames (connector: Connector, base_url: string, to
 invalid json resp
 */
 export async function getTableNamesBySchema (connector: Connector, base_url: string, token: string, share: string, schema: string, maxResults=10) {
-  var tableNames: string[]
-  var url = `${base_url}/shares/${share}/schemas/${schema}/tables?maxResults=${maxResults}`
-  var resp: AjaxResponse
+  let tableNames: string[]
+  let url = `${base_url}/shares/${share}/schemas/${schema}/tables?maxResults=${maxResults}`
+  let resp: AjaxResponse
   resp = await getResource(connector, url, token)
 
   tableNames = resp.body.items.map((tableObj: any) => tableObj.name)    
 
   // check for additional pagination results
-  var nextPageToken = resp.body.nextPageToken
+  let nextPageToken = resp.body.nextPageToken
   while (nextPageToken) {
     url = `${base_url}/shares/${share}/schemas/${schema}/tables?maxResults=${maxResults}&pageToken=${nextPageToken}`
     resp = await getResource(connector, url, token)
@@ -96,17 +96,17 @@ export async function getTableNamesBySchema (connector: Connector, base_url: str
 fetching and parsing is done naively in sequence
 */
 export async function getDeltaShareStructure (connector: Connector, base_url: string, token: string) {
-  var Shares: Node[] = []
-  var shareNames: string[]
+  let Shares: Node[] = []
+  let shareNames: string[]
   shareNames = await getShareNames(connector, base_url, token)
 
   for (const share of shareNames) {
-    var Schemas: Node[] = []
-    var schemaNames: string[]
+    let Schemas: Node[] = []
+    let schemaNames: string[]
     schemaNames = await getSchemaNames(connector, base_url, token, share)
 
     for (const schemaName of schemaNames) {
-      var tableNames: string[] 
+      let tableNames: string[] 
       tableNames = await getTableNamesBySchema(connector, base_url, token, share, schemaName)
 
       Schemas.push(<Node>{
