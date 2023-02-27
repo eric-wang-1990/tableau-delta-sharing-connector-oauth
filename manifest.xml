@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <connector-plugin class='delta_sharing' superclass='eps' plugin-version='1.0.0' name='Delta Sharing'
-                  version='18.1' min-version-tableau='2022.4'>
+                  version='18.1' min-version-tableau='2022.4.1'>
     <vendor-information>
         <company name='Databricks'/>
         <support-link url='https://help.databricks.com/'/>

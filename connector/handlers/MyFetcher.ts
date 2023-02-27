@@ -34,7 +34,7 @@ async function getTableMetadata (
   })
 
   // endpoint gives us binary response; convert to utf8 string and split json objects by newline
-  // arr will be 1 size larger since response includes an extra newline at the end
+  // arr length will be 1 larger since response includes an extra newline at the end
   const rawString = Buffer.from(resp).toString('utf8') 
   const stringArr = rawString.split(new RegExp("\r\n|\r|\n")) 
   

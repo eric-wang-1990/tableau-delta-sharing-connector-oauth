@@ -17,9 +17,8 @@ const ConnectorView = () => {
     handleCreds
   } = useConnector()
   const [creds, setCreds] = useState({
-    // remove this later
-    url: 'https://sharing.delta.io/delta-sharing',
-    bearerToken: 'faaie590d541265bcab1f2de9813274bf233',
+    url: '',
+    bearerToken: '',
   })
   const [sqlFilters, setSqlFilters] = useState([] as string[])
   const [rowLimit, setRowLimit] = useState('')
@@ -35,7 +34,6 @@ const ConnectorView = () => {
     })
   }
   const sqlInputHandler = (e: React.FormEvent<HTMLInputElement>) => {
-    // TODO add support for multiple SQL filter queries
     setSqlFilters([e.currentTarget.value])
   }
   const rowLimitInputHandler = (e: React.FormEvent<HTMLInputElement>) => {
@@ -77,10 +75,10 @@ const ConnectorView = () => {
 
             <form className="card-body">
               <label htmlFor="url" className="form-label">URL</label>
-              <input key="url" name="url" onChange={credsInputHandler} value={creds.url} className="form-control mb-2" placeholder="URL"/>
+              <input key="url" name="url" onChange={credsInputHandler} value={creds.url} className="form-control mb-2" placeholder="https://sharing.delta.io/delta-sharing"/>
 
               <label htmlFor="bearerToken" className="form-label">Bearer Token</label>
-              <input key="bearerToken" name="bearerToken" onChange={credsInputHandler} value={creds.bearerToken} className="form-control mb-3" placeholder="Bearer Token"/>
+              <input key="bearerToken" name="bearerToken" onChange={credsInputHandler} value={creds.bearerToken} className="form-control mb-3" placeholder=""/>
 
             </form>
           </div>
@@ -133,7 +131,6 @@ const ConnectorView = () => {
           </div>
           <form className="card-body">
             <label htmlFor="sqlFilter" className="form-label">SQL Filter</label>
-            {/* TODO add support for multiple sqlFilters */}
             <input key="sqlFilter" onChange={sqlInputHandler} value={sqlFilters[0]} className="form-control mb-2" placeholder="eg. date >= '2021-01-01' AND magnitude <= 5.3"/> 
 
             <label htmlFor="rowFilter" className="form-label">Row Limit</label>
