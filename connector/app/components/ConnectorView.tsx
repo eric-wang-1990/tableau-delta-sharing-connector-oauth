@@ -78,7 +78,11 @@ const ConnectorView = () => {
               <input key="url" name="url" onChange={credsInputHandler} value={creds.url} className="form-control mb-2" placeholder="https://sharing.delta.io/delta-sharing"/>
 
               <label htmlFor="bearerToken" className="form-label">Bearer Token</label>
-              <input key="bearerToken" name="bearerToken" onChange={credsInputHandler} value={creds.bearerToken} className="form-control mb-3" placeholder=""/>
+              <input key="bearerToken" name="bearerToken" onChange={credsInputHandler} value={creds.bearerToken} className="form-control mb-3" placeholder="" type="password"/>
+
+              <div className="or mb-3"> or </div>
+
+              <input className="form-control mb-2" type="file" id="formFile"/>
 
             </form>
           </div>
