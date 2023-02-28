@@ -17,7 +17,7 @@ const ConnectorView = () => {
     handleCreds
   } = useConnector()
   const [creds, setCreds] = useState({
-    url: '',
+    endpoint: '',
     bearerToken: '',
   })
   const [sqlFilters, setSqlFilters] = useState([] as string[])
@@ -28,7 +28,7 @@ const ConnectorView = () => {
   const credsInputHandler = (e: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
     setCreds({
-      url: creds.url,
+      endpoint: creds.endpoint,
       bearerToken: creds.bearerToken,
       [name]: value
     })
@@ -36,6 +36,21 @@ const ConnectorView = () => {
   const sqlInputHandler = (e: React.FormEvent<HTMLInputElement>) => {
     setSqlFilters([e.currentTarget.value])
   }
+  const shareFileInputHandler = (e: React.FormEvent<HTMLInputElement>) => {
+    const file = e.currentTarget.files ? e.currentTarget.files[0] : null
+    if (!file) {
+      return
+    }
+    const read = new FileReader()
+    read.readAsBinaryString(file)
+    read.onloadend = () => {
+      const data = read.result?.toString()
+      const creds = data ? JSON.parse(data) : null
+      if (creds) {
+        setCreds(creds)
+      }
+    }
+  } 
   const rowLimitInputHandler = (e: React.FormEvent<HTMLInputElement>) => {
     // regex test for numbers only
     const re = /^[0-9\b]+$/
@@ -49,9 +64,9 @@ const ConnectorView = () => {
     handleSubmit(checked, sqlFilters, rowLimit)
   }
   const onSendCreds = () => {
-    handleCreds(creds.url, creds.bearerToken)
+    handleCreds(creds.endpoint, creds.bearerToken)
     setCreds({
-      url: '',
+      endpoint: '',
       bearerToken: '' 
     })
   }
@@ -74,15 +89,18 @@ const ConnectorView = () => {
             </div>
 
             <form className="card-body">
-              <label htmlFor="url" className="form-label">URL</label>
-              <input key="url" name="url" onChange={credsInputHandler} value={creds.url} className="form-control mb-2" placeholder="https://sharing.delta.io/delta-sharing"/>
+              <label htmlFor="endpoint" className="form-label">Endpoint URL</label>
+              <input key="endpoint" name="endpoint" onChange={credsInputHandler} value={creds.endpoint} className="form-control mb-2" placeholder="https://sharing.delta.io/delta-sharing"/>
 
               <label htmlFor="bearerToken" className="form-label">Bearer Token</label>
               <input key="bearerToken" name="bearerToken" onChange={credsInputHandler} value={creds.bearerToken} className="form-control mb-3" placeholder="" type="password"/>
 
               <div className="or mb-3"> or </div>
 
-              <input className="form-control mb-2" type="file" id="formFile"/>
+              <div className="input-group custom-file-button">
+                <label className="input-group-text" htmlFor="inputGroupFile">Upload share file</label>
+                <input type="file" className="form-control" id="inputGroupFile" accept=".share" onChange={shareFileInputHandler}/>
+              </div>
 
             </form>
           </div>
