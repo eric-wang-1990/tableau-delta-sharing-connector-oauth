@@ -81,7 +81,7 @@ async function getDataTables(fileDataObjArr: any[], table: string): Promise<Data
 
 export default class MyFetcher extends Fetcher {
   async *fetch({ handlerInput, secrets }: FetchOptions) {
-    const url = handlerInput.data.url
+    const endpoint = handlerInput.data.endpoint
     const tables = handlerInput.data.tables
     const sqlFilters = handlerInput.data.sqlFilters
     const rowLimit = handlerInput.data.rowLimit
@@ -90,7 +90,7 @@ export default class MyFetcher extends Fetcher {
       const bearer_token = secrets.bearer_token as string
       // secrets is guaranteed to "exist" but may still not have bearer token field
 
-      const tableMetaData = await getTableMetadata(url, bearer_token, "delta_sharing", "default", tables[0], sqlFilters, rowLimit)
+      const tableMetaData = await getTableMetadata(endpoint, bearer_token, "delta_sharing", "default", tables[0], sqlFilters, rowLimit)
       const dataTables = await getDataTables(tableMetaData, tables[0])
 
       for (const datatable of dataTables) {
