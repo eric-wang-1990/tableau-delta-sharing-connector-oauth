@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Connector, { HandlerInput, Logger, SecretsType } from '@tableau/taco-toolkit'
-import { getDeltaShareStructure } from '../utils'
+import { getDeltaShareStructure, Table } from '../utils'
 import { Node } from 'react-checkbox-tree'
 
 type ConnectorState = {
@@ -14,6 +14,7 @@ type ConnectorState = {
   endpoint: string
   token: string
   deltaShareStructure: Node[] | undefined
+  tableMap: Map<string, Table> | undefined
 }
 
 const useConnector = () => {
@@ -29,6 +30,7 @@ const useConnector = () => {
     endpoint: '',
     token: '',
     deltaShareStructure: undefined,
+    tableMap: undefined
   })
 
   const onInitializedSuccess = (_connector: Connector) => {
@@ -56,8 +58,13 @@ const useConnector = () => {
   }
 
   const handleSubmit = (tables: string[], sqlFilters: string[], rowLimit: string) => {
+    if (!connectorState.tableMap) {
+      Logger.error(`tableMap undefined on submit`)
+      return
+    }
+
     const handlerInputs = connectorState.handlerInputs.map((handlerInput) => {
-      handlerInput.data["tables"] = tables
+      handlerInput.data["tables"] = tables.map((name: string) => connectorState.tableMap?.get(name))
       handlerInput.data["sqlFilters"] = sqlFilters.length > 0 ? sqlFilters : null
       handlerInput.data["rowLimit"] = rowLimit ? parseInt(rowLimit) : null
       return handlerInput
@@ -100,8 +107,8 @@ const useConnector = () => {
       return
     }
 
-    getDeltaShareStructure(connector, connectorState.endpoint, connectorState.token).then((arr) => {
-      setConnectorState({ ...connectorState, deltaShareStructure: arr})
+    getDeltaShareStructure(connector, connectorState.endpoint, connectorState.token).then(([nodeStuct, tableMap]) => {
+      setConnectorState({ ...connectorState, deltaShareStructure: nodeStuct, tableMap: tableMap})
     }).catch((error) => {
       Logger.info(error.stack)
       Logger.error(error.stack)

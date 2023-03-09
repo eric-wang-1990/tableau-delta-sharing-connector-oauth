@@ -132,6 +132,7 @@ const ConnectorView = () => {
                 checked={checked}
                 expanded={expanded}
                 onlyLeafCheckboxes={true}
+                expandOnClick={true}
                 onCheck={uniqueSelection}
                 onExpand={expanded => setExpanded(expanded)}
                 iconsClass="fa5"

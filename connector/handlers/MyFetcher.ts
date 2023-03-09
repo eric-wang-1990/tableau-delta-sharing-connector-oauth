@@ -7,6 +7,7 @@ import {
   DataTable,
   log
 } from '@tableau/taco-toolkit/handlers'
+import { Table } from '../app/utils'
 
 async function getTableMetadata (
   base_url: string,
@@ -82,7 +83,7 @@ async function getDataTables(fileDataObjArr: any[], table: string): Promise<Data
 export default class MyFetcher extends Fetcher {
   async *fetch({ handlerInput, secrets }: FetchOptions) {
     const endpoint = handlerInput.data.endpoint
-    const tables = handlerInput.data.tables
+    const tables: Table[] = handlerInput.data.tables
     const sqlFilters = handlerInput.data.sqlFilters
     const rowLimit = handlerInput.data.rowLimit
 
@@ -90,8 +91,8 @@ export default class MyFetcher extends Fetcher {
       const bearer_token = secrets.bearer_token as string
       // secrets is guaranteed to "exist" but may still not have bearer token field
 
-      const tableMetaData = await getTableMetadata(endpoint, bearer_token, "delta_sharing", "default", tables[0], sqlFilters, rowLimit)
-      const dataTables = await getDataTables(tableMetaData, tables[0])
+      const tableMetaData = await getTableMetadata(endpoint, bearer_token, tables[0].share, tables[0].schema, tables[0].name, sqlFilters, rowLimit)
+      const dataTables = await getDataTables(tableMetaData, tables[0].name)
 
       for (const datatable of dataTables) {
         yield datatable 

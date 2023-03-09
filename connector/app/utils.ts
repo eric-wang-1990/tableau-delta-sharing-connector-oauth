@@ -1,8 +1,26 @@
 import { Logger, Connector, AjaxResponse } from '@tableau/taco-toolkit'
 import { Node } from 'react-checkbox-tree'
 
+interface Share {
+  name: string;
+  id?: string; 
+}
+
+interface Schema {
+  name: string;
+  share: string;
+}
+
+export interface Table {
+  name: string;
+  schema: string;
+  share: string;
+  shareId?: string;
+  id?: string;
+}
+
 async function getResource(connector: Connector, url: string, token: string) {
-  const headers = {Authentication: `Bearer ${token}`}
+  const headers = {Authorization: `Bearer ${token}`}
   let resp = await connector.get(url, {
     headers: headers,
     bypassCorsPolicy: true,
@@ -19,14 +37,15 @@ async function getResource(connector: Connector, url: string, token: string) {
   return resp
 }
 
-/*
-invalid json resp: unsafe any type 
-*/
 export async function getShareNames (connector: Connector, base_url: string, token: string, maxResults=10) {
   let shareNames: string[]
   let url = `${base_url}/shares?maxResults=${maxResults}`
   let resp: AjaxResponse = await getResource(connector, url, token)
-  shareNames = resp.body.items.map((shareObj: any) => shareObj.name)
+
+  if (!resp.body.items) {
+    return []
+  }
+  shareNames = resp.body.items.map((shareObj: Share) => shareObj.name)
 
   // check for additional pagination results
   let nextPageToken = resp.body.nextPageToken
@@ -35,21 +54,23 @@ export async function getShareNames (connector: Connector, base_url: string, tok
     resp = await getResource(connector, url, token)
 
     nextPageToken = resp.body.nextPageToken
-    const respShareNames = resp.body.items.map((shareObj: any) => shareObj.name)
+    const respShareNames = resp.body.items.map((shareObj: Share) => shareObj.name)
     shareNames.push(...respShareNames)
   }
 
   return shareNames
 }
 
-/*
-invalid json resp: unsafe any type
-*/
 export async function getSchemaNames (connector: Connector, base_url: string, token: string, share: string, maxResults=10) {
   let schemaNames: string[]
   let url = `${base_url}/shares/${share}/schemas?maxResults=${maxResults}`
   let resp: AjaxResponse = await getResource(connector, url, token)
-  schemaNames = resp.body.items.map((schemaObj: any) => schemaObj.name)
+
+  if (!resp.body.items) {
+    Logger.info(resp.body.items)
+    return []
+  }
+  schemaNames = resp.body.items.map((schemaObj: Schema) => schemaObj.name)
 
   // check for addtional pagination results
   let nextPageToken = resp.body.nextPageToken
@@ -58,22 +79,22 @@ export async function getSchemaNames (connector: Connector, base_url: string, to
     resp = await getResource(connector, url, token)
 
     nextPageToken = resp.body.nextPageToken
-    const respSchemaNames = resp.body.items.map((schemaObj: any) => schemaObj.name)
+    const respSchemaNames = resp.body.items.map((schemaObj: Schema) => schemaObj.name)
     schemaNames.push(...respSchemaNames)
   }
 
   return schemaNames
 }
 
-/*
-invalid json resp
-*/
 export async function getTableNamesBySchema (connector: Connector, base_url: string, token: string, share: string, schema: string, maxResults=10) {
   let tableNames: string[]
   let url = `${base_url}/shares/${share}/schemas/${schema}/tables?maxResults=${maxResults}`
   let resp: AjaxResponse = await getResource(connector, url, token)
 
-  tableNames = resp.body.items.map((tableObj: any) => tableObj.name)    
+  if (!resp.body.items) {
+    return []
+  }
+  tableNames = resp.body.items.map((tableObj: Table) => tableObj.name)    
 
   // check for additional pagination results
   let nextPageToken = resp.body.nextPageToken
@@ -82,19 +103,49 @@ export async function getTableNamesBySchema (connector: Connector, base_url: str
     resp = await getResource(connector, url, token)
 
     nextPageToken = resp.body.nextPageToken
-    const respTableNames = resp.body.items.map((tableObj: any) => tableObj.name)
+    const respTableNames = resp.body.items.map((tableObj: Table) => tableObj.name)
     tableNames.push(...respTableNames)
   }
 
   return tableNames
 }
 
+export async function getTableObjsBySchema (connector: Connector, base_url: string, token: string, share: string, schema: string, maxResults=10) {
+  let tableObjs: Table[]
+  let url = `${base_url}/shares/${share}/schemas/${schema}/tables?maxResults=${maxResults}`
+  let resp: AjaxResponse = await getResource(connector, url, token)
+
+  if (!resp.body.items) {
+    return []
+  }
+  tableObjs = resp.body.items as Table[]
+
+  // check for additional pagination results
+  let nextPageToken = resp.body.nextPageToken
+  while (nextPageToken) {
+    url = `${base_url}/shares/${share}/schemas/${schema}/tables?maxResults=${maxResults}&pageToken=${nextPageToken}`
+    resp = await getResource(connector, url, token)
+
+    nextPageToken = resp.body.nextPageToken
+    const respTableObjs = resp.body.items as Table[]
+    tableObjs.push(...respTableObjs)
+  }
+
+  return tableObjs 
+}
+
 /*
 fetching and parsing is done naively in sequence
+
+returns a tuple containing the Node structure used by react-checkbox-tree and a Map object,
+where the keys are table names and values are Table Objects.
+
+returns: [ Node[], Map<string, Table> ]. The Promise wrapper is for async syntax reasons.
 */
-export async function getDeltaShareStructure (connector: Connector, base_url: string, token: string) {
+export async function getDeltaShareStructure (connector: Connector, base_url: string, token: string): Promise<[Node[], Map<string, Table>]>{
   let Shares: Node[] = []
   let shareNames: string[] = await getShareNames(connector, base_url, token)
+  let tableMap: Map<string, Table> = new Map<string, Table>()
 
   for (const share of shareNames) {
     let Schemas: Node[] = []
@@ -102,14 +153,15 @@ export async function getDeltaShareStructure (connector: Connector, base_url: st
     schemaNames = await getSchemaNames(connector, base_url, token, share)
 
     for (const schemaName of schemaNames) {
-      let tableNames: string[] 
-      tableNames = await getTableNamesBySchema(connector, base_url, token, share, schemaName)
+      let tableObjs: Table[] 
+      tableObjs = await getTableObjsBySchema(connector, base_url, token, share, schemaName)
 
       Schemas.push({
         label: schemaName,
         value: schemaName,
-        children: tableNames.map((tableName: string) => {
-          return { label: tableName, value: tableName } as Node
+        children: tableObjs.map((tableObj: Table) => {
+          tableMap.set(tableObj.name, tableObj)
+          return { label: tableObj.name, value: tableObj.name} as Node
         }), 
       } as Node)
     }
@@ -121,5 +173,5 @@ export async function getDeltaShareStructure (connector: Connector, base_url: st
     } as Node)
   }
 
-  return Shares 
+  return [Shares, tableMap]
 }
