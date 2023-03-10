@@ -162,7 +162,7 @@ const ConnectorView = () => {
         </div>
 
         <div className="text-center">
-          <button type="button" className="btn btn-success" onClick={onSubmit} disabled={isSubmitting || checked.length == 0}> 
+          <button type="button" className="btn btn-success" onClick={onSubmit} disabled={isSubmitting || checked.length === 0}> 
             Get Table Data
           </button>
         </div>

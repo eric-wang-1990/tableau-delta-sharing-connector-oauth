@@ -25,7 +25,7 @@ async function getTableMetadata (
     ...(sqlFilters && { 'predicateHints': sqlFilters }),
     ...(rowLimit && { 'limitHint': rowLimit })
   }
-  const resp = await FetchUtils.fetchJson(url, {
+  const resp = await FetchUtils.fetchArrayBuffer(url, {
     method: 'POST',
     headers: {
       ...headers,
@@ -33,8 +33,8 @@ async function getTableMetadata (
     },
     body: JSON.stringify(body)
   })
-
-  // endpoint gives us binary response; convert to utf8 string and split json objects by newline
+  // resp not guaranteed to be json obj
+  // convert binary response to utf8 string and split json objects by newline
   // arr length will be 1 larger since response includes an extra newline at the end
   const rawString = Buffer.from(resp).toString('utf8') 
   const stringArr = rawString.split(new RegExp("\r\n|\r|\n")) 
