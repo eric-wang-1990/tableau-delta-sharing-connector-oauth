@@ -135,10 +135,10 @@ export async function getTableObjsBySchema (connector: Connector, base_url: stri
 }
 
 /*
-fetching and parsing is done naively in sequence
+loads the entire structure at once naively.
 
 returns a tuple containing the Node structure used by react-checkbox-tree and a Map object,
-where the keys are table names and values are Table Objects.
+where the keys are denoted by "<share>.<schema>.<table>" and values are Table Objects.
 
 returns: [ Node[], Map<string, Table> ]. The Promise wrapper is for async syntax reasons.
 */
@@ -147,28 +147,30 @@ export async function getDeltaShareStructure (connector: Connector, base_url: st
   let shareNames: string[] = await getShareNames(connector, base_url, token)
   let tableMap: Map<string, Table> = new Map<string, Table>()
 
-  for (const share of shareNames) {
+  for (const shareName of shareNames) {
     let Schemas: Node[] = []
     let schemaNames: string[]
-    schemaNames = await getSchemaNames(connector, base_url, token, share)
+    schemaNames = await getSchemaNames(connector, base_url, token, shareName)
 
     for (const schemaName of schemaNames) {
       let tableObjs: Table[] 
-      tableObjs = await getTableObjsBySchema(connector, base_url, token, share, schemaName)
+      const schemaString = shareName + "." + schemaName
+      tableObjs = await getTableObjsBySchema(connector, base_url, token, shareName, schemaName)
 
       Schemas.push({
         label: schemaName,
-        value: schemaName,
+        value: schemaString,
         children: tableObjs.map((tableObj: Table) => {
-          tableMap.set(tableObj.name, tableObj)
-          return { label: tableObj.name, value: tableObj.name} as Node
+          const tableString = schemaString + "." + tableObj.name 
+          tableMap.set(tableString, tableObj)
+          return { label: tableObj.name, value: tableString} as Node
         }), 
       } as Node)
     }
 
     Shares.push({
-      label: share,
-      value: share,
+      label: shareName,
+      value: shareName,
       children: Schemas,
     } as Node)
   }
