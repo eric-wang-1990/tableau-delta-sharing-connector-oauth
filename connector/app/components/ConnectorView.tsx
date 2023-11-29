@@ -112,9 +112,9 @@ const ConnectorView = () => {
           </div>
             <div className="alert alert-info" role="alert">
               <p>
-                 In private preview only one <a href="https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#file" target="_blank" rel="noopener noreferrer">delta sharing file</a> will be loaded
+                 In private preview, only one <a href="https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#file" target="_blank" rel="noopener noreferrer">delta sharing file</a> will be loaded.
                  <br />
-                 It may result in partial data if your delta share contain multiple files
+                 It may result in partial data if your delta share contains multiple files
               </p>
             </div>
           {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
