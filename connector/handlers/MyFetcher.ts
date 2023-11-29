@@ -50,7 +50,10 @@ async function getTableMetadata (
 }
 
 /*
-gets s3 files in parallel from file metadata arr. TODO replace any type with safer custon JSON object
+    * Returns the url of the data table file
+    * @param fileDataObjArr - array of file data objects
+    * @returns url of data table file
+    * TODO: handle multiple data table files after Tableau support is added
 */
 function getDataTableUrl(fileDataObjArr: any[]): string | undefined {
   const dataTableUrls: string[] = [];

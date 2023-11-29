@@ -5,11 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9227cc39-2dd7-47b6-bd27-e40bdd142f05" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../connection-fields.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../connection-fields.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/connector.json" beforeDir="false" afterPath="$PROJECT_DIR$/connector.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handlers/MyFetcher.ts" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/MyFetcher.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../manifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../manifest.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
