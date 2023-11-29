@@ -89,6 +89,7 @@ const ConnectorView = () => {
             </div>
 
             <form className="card-body">
+
               <label htmlFor="endpoint" className="form-label">Endpoint URL</label>
               <input key="endpoint" name="endpoint" onChange={credsInputHandler} value={creds.endpoint} className="form-control mb-2" placeholder="https://sharing.delta.io/delta-sharing"/>
 
@@ -109,7 +110,13 @@ const ConnectorView = () => {
               { isInitializing ? 'Initializing...' : (isSubmitting ? 'Loading tables...' : 'Get Data') }
             </button>
           </div>
-
+            <div className="alert alert-info" role="alert">
+              <p>
+                 In private preview only one <a href="https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#file" target="_blank" rel="noopener noreferrer">delta sharing file</a> will be loaded
+                 <br />
+                 It may result in partial data if your delta share contain multiple files
+              </p>
+            </div>
           {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
 
         </div>

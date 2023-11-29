@@ -52,8 +52,9 @@ async function getTableMetadata (
 /*
 gets s3 files in parallel from file metadata arr. TODO replace any type with safer custon JSON object
 */
-async function getDataTables(fileDataObjArr: any[], table: string): Promise<DataTable[]> {
-  var dataTablePromises = [] as Promise<DataTable>[]
+function getDataTableUrl(fileDataObjArr: any[]): String {
+   log("fileDataObjArr: " + fileDataObjArr)
+   const dataTableUrls: String[] = [];
 
   // get s3 files 
   for (let i = 0; i < fileDataObjArr.length; i++) {
@@ -63,21 +64,16 @@ async function getDataTables(fileDataObjArr: any[], table: string): Promise<Data
     if (dataObj.metaData) { // metadata
   
     } else if (dataObj.file) { // file
-      uri = dataObj.file.url
+      dataTableUrls.push(dataObj.file.url);
     } else { // data change
   
     }
-  
-    // populate arr with promises resolving -> getting the resourceBinary + parsing to dataTable
-    const resourceBinaryPromise = FetchUtils.fetchArrayBuffer(uri) // s3 doesn't need auth?
-    const dataTablePromise = resourceBinaryPromise.then(
-      (resourceBinary) => ParquetUtils.parse(resourceBinary, table)
-    )
-
-    dataTablePromises.push(dataTablePromise)
   }
-  
-  return Promise.all(dataTablePromises)
+
+  log("dataTableUrls: " + dataTableUrls)
+  if(dataTableUrls.length === 0) throw new Error('No data table urls found.')
+  if(dataTableUrls.length > 1) throw new Error('More than one data table url found. Only using first url.')
+  return dataTableUrls[0]
 }
 
 export default class MyFetcher extends Fetcher {
@@ -92,11 +88,8 @@ export default class MyFetcher extends Fetcher {
       // secrets is guaranteed to "exist" but may still not have bearer token field
 
       const tableMetaData = await getTableMetadata(endpoint, bearer_token, tables[0].share, tables[0].schema, tables[0].name, sqlFilters, rowLimit)
-      const dataTables = await getDataTables(tableMetaData, tables[0].name)
-
-      for (const datatable of dataTables) {
-        yield datatable 
-      }
+      const dataTable = getDataTableUrl(tableMetaData)
+      yield await FetchUtils.loadParquetData(dataTable)
 
     }
   }
