@@ -52,29 +52,25 @@ async function getTableMetadata (
 /*
 gets s3 files in parallel from file metadata arr. TODO replace any type with safer custon JSON object
 */
-function getDataTableUrl(fileDataObjArr: any[]): String {
-   log("fileDataObjArr: " + fileDataObjArr)
-   const dataTableUrls: String[] = [];
+function getDataTableUrl(fileDataObjArr: any[]): string | undefined {
+  const dataTableUrls: string[] = [];
 
-  // get s3 files 
-  for (let i = 0; i < fileDataObjArr.length; i++) {
-    const dataObj = fileDataObjArr[i]
-    var uri = null 
-  
-    if (dataObj.metaData) { // metadata
-  
-    } else if (dataObj.file) { // file
+  // get s3 files
+  for (const dataObj of fileDataObjArr) {
+    if (dataObj.file) {
       dataTableUrls.push(dataObj.file.url);
-    } else { // data change
-  
     }
   }
 
-  log("dataTableUrls: " + dataTableUrls)
-  if(dataTableUrls.length === 0) throw new Error('No data table urls found.')
-  if(dataTableUrls.length > 1) throw new Error('More than one data table url found. Only using first url.')
-  return dataTableUrls[0]
+  if (dataTableUrls.length === 0) {
+    log('No data table urls found.');
+  } else if (dataTableUrls.length > 1) {
+    log('More than one data table url found. Only using first url.');
+  }
+
+  return dataTableUrls[0];
 }
+
 
 export default class MyFetcher extends Fetcher {
   async *fetch({ handlerInput, secrets }: FetchOptions) {
