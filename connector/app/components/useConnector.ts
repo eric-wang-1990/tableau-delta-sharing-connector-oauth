@@ -63,12 +63,20 @@ const useConnector = () => {
       return
     }
 
-    const handlerInputs = connectorState.handlerInputs.map((handlerInput) => {
-      handlerInput.data["tables"] = tables.map((name: string) => connectorState.tableMap?.get(name))
-      handlerInput.data["sqlFilters"] = sqlFilters.length > 0 ? sqlFilters : null
-      handlerInput.data["rowLimit"] = rowLimit ? parseInt(rowLimit) : null
-      return handlerInput
-    })
+    const handlerInputs = tables.map((tableName) => {
+        return {
+        fetcher: 'MyFetcher',
+        parser: 'taco:parquet-file-parser',
+        name: tableName,
+        data: {
+            endpoint : connectorState.endpoint, // corresponding endpoint
+            tables : tables.map((name: string) => connectorState.tableMap?.get(name)),
+            sqlFilters : sqlFilters.length > 0 ? sqlFilters : null,
+            rowLimit : rowLimit ? parseInt(rowLimit) : null
+        },
+      }
+  })
+
     setConnectorState({ ...connectorState, isSubmitting: true, handlerInputs: handlerInputs })
   }
 
@@ -76,7 +84,7 @@ const useConnector = () => {
     const handlerInputs = [
       {
         fetcher: 'MyFetcher',
-        parser: 'MyParser',
+        parser: 'taco:parquet-file-parser',
         data: {
           endpoint: endpoint,
         },
@@ -88,7 +96,6 @@ const useConnector = () => {
     setConnectorState({ 
       ...connectorState,
       hasCreds: true,
-      handlerInputs,
       secrets,
       endpoint,
       token,

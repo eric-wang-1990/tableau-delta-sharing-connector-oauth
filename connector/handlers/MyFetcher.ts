@@ -50,35 +50,30 @@ async function getTableMetadata (
 }
 
 /*
-gets s3 files in parallel from file metadata arr. TODO replace any type with safer custon JSON object
+    * Returns the url of the data table file
+    * @param fileDataObjArr - array of file data objects
+    * @returns url of data table file
+    * TODO: handle multiple data table files after Tableau support is added
 */
-async function getDataTables(fileDataObjArr: any[], table: string): Promise<DataTable[]> {
-  var dataTablePromises = [] as Promise<DataTable>[]
+function getDataTableUrl(fileDataObjArr: any[]): string | undefined {
+  const dataTableUrls: string[] = [];
 
-  // get s3 files 
-  for (let i = 0; i < fileDataObjArr.length; i++) {
-    const dataObj = fileDataObjArr[i]
-    var uri = null 
-  
-    if (dataObj.metaData) { // metadata
-  
-    } else if (dataObj.file) { // file
-      uri = dataObj.file.url
-    } else { // data change
-  
+  // get s3 files
+  for (const dataObj of fileDataObjArr) {
+    if (dataObj.file) {
+      dataTableUrls.push(dataObj.file.url);
     }
-  
-    // populate arr with promises resolving -> getting the resourceBinary + parsing to dataTable
-    const resourceBinaryPromise = FetchUtils.fetchArrayBuffer(uri) // s3 doesn't need auth?
-    const dataTablePromise = resourceBinaryPromise.then(
-      (resourceBinary) => ParquetUtils.parse(resourceBinary, table)
-    )
-
-    dataTablePromises.push(dataTablePromise)
   }
-  
-  return Promise.all(dataTablePromises)
+
+  if (dataTableUrls.length === 0) {
+    log('No data table urls found.');
+  } else if (dataTableUrls.length > 1) {
+    log('More than one data table url found. Only using first url.');
+  }
+
+  return dataTableUrls[0];
 }
+
 
 export default class MyFetcher extends Fetcher {
   async *fetch({ handlerInput, secrets }: FetchOptions) {
@@ -92,11 +87,8 @@ export default class MyFetcher extends Fetcher {
       // secrets is guaranteed to "exist" but may still not have bearer token field
 
       const tableMetaData = await getTableMetadata(endpoint, bearer_token, tables[0].share, tables[0].schema, tables[0].name, sqlFilters, rowLimit)
-      const dataTables = await getDataTables(tableMetaData, tables[0].name)
-
-      for (const datatable of dataTables) {
-        yield datatable 
-      }
+      const dataTable = getDataTableUrl(tableMetaData)
+      yield await FetchUtils.loadParquetData(dataTable)
 
     }
   }
