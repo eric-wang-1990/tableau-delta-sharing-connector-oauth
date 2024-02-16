@@ -55,7 +55,7 @@ async function getTableMetadata (
     * @returns url of data table file
     * TODO: handle multiple data table files after Tableau support is added
 */
-function getDataTableUrl(fileDataObjArr: any[]): string | undefined {
+function getDataTableUrls(fileDataObjArr: any[]): string[]{
   const dataTableUrls: string[] = [];
 
   // get s3 files
@@ -70,8 +70,7 @@ function getDataTableUrl(fileDataObjArr: any[]): string | undefined {
   } else if (dataTableUrls.length > 1) {
     log('More than one data table url found. Only using first url.');
   }
-
-  return dataTableUrls[0];
+  return dataTableUrls;
 }
 
 
@@ -87,8 +86,11 @@ export default class MyFetcher extends Fetcher {
       // secrets is guaranteed to "exist" but may still not have bearer token field
 
       const tableMetaData = await getTableMetadata(endpoint, bearer_token, tables[0].share, tables[0].schema, tables[0].name, sqlFilters, rowLimit)
-      const dataTable = getDataTableUrl(tableMetaData)
-      yield await FetchUtils.loadParquetData(dataTable)
+      const dataTableUrls = getDataTableUrls(tableMetaData)
+
+      const promises = dataTableUrls.map((url) => FetchUtils.loadParquetData(url))
+      await Promise.all(promises)
+      yield
 
     }
   }
