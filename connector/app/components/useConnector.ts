@@ -81,15 +81,6 @@ const useConnector = () => {
   }
 
   const handleCreds = (endpoint: string, token: string) => {
-    const handlerInputs = [
-      {
-        fetcher: 'MyFetcher',
-        parser: 'taco:parquet-file-parser',
-        data: {
-          endpoint: endpoint,
-        },
-      },
-    ]
     const secrets = {
       bearer_token: token
     }

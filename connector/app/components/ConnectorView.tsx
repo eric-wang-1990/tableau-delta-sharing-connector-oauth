@@ -3,7 +3,6 @@ import 'font-awesome/css/font-awesome.min.css';
 import React, { useState } from 'react'
 import CheckboxTree from 'react-checkbox-tree'
 import useConnector from './useConnector'
-import { Logger } from '@tableau/taco-toolkit';
 
 const ConnectorView = () => {
   const { 
@@ -42,7 +41,7 @@ const ConnectorView = () => {
       return
     }
     const read = new FileReader()
-    read.readAsBinaryString(file)
+    reader.readAsText(file)
     read.onloadend = () => {
       const data = read.result?.toString()
       const creds = data ? JSON.parse(data) : null
