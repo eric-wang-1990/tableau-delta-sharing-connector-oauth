@@ -1,9 +1,14 @@
-# Tableau Databricks Delta Sharing Connector
+# databricks-delta-sharing-connector
+Databricks's Delta Sharing WDC 3.0 based Connector
 
 The connector is built with the Tableau Web Data Connector 3.0 SDK and provides:
 - Share/Schema/Table browsing wihtin a share
 - Simple bearer token authentication
 
+
+The design document can be accessed here: 
+
+https://docs.google.com/document/d/1VhgpHaUfNmQ-Q10L3zRjMd3vT5uvj-c7FoCYWzg8k5Y/edit?usp=sharing
 
 ## Runbook
 
@@ -20,6 +25,7 @@ To run .taco file in top level directory (launches Tableau Desktop, runs interac
 
 To run interactive phase only  
 `taco start`
+
 
 
 #### Dev Loop to test interactive phase (browser runtime): 
@@ -48,5 +54,3 @@ Likewise, `@tableau/taco-toolkit/app` and the `/app` directory will follow the s
 
 ### Security Barriers
 "Node APIs are not available in the connector runtime environment (due to security reasons)". This means standard node imports such as `path` or `worker_threads` cannot be used.
-
-

@@ -41,7 +41,6 @@ const ConnectorView = () => {
       return
     }
     const read = new FileReader()
-    reader.readAsText(file)
     read.onloadend = () => {
       const data = read.result?.toString()
       const creds = data ? JSON.parse(data) : null
@@ -49,6 +48,7 @@ const ConnectorView = () => {
         setCreds(creds)
       }
     }
+    read.readAsText(file)
   } 
   const rowLimitInputHandler = (e: React.FormEvent<HTMLInputElement>) => {
     // regex test for numbers only
