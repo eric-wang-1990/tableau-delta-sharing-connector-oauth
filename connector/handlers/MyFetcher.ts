@@ -2,9 +2,7 @@ import {
   Fetcher,
   FetchOptions,
   FetchUtils,
-  ParquetUtils,
   getAuthHeader,
-  DataTable,
   log
 } from '@tableau/taco-toolkit/handlers'
 import { Table } from '../app/utils'
@@ -39,8 +37,6 @@ async function getTableMetadata (
   const rawString = Buffer.from(resp).toString('utf8') 
   const stringArr = rawString.split(new RegExp("\r\n|\r|\n")) 
   
-  const protocolObj = JSON.parse(stringArr[0])
-  const metadataObj = JSON.parse(stringArr[1])
   const fileDataObjArr = new Array(stringArr.length - 3)
   for (let i = 2; i < stringArr.length - 1; i++) {
     fileDataObjArr[i-2] = JSON.parse(stringArr[i])

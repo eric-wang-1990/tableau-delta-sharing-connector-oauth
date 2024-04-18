@@ -2,7 +2,7 @@
   "name": "Delta Sharing",
   "version": "1.0.0",
   "tableau-version": {
-    "min": "2023.3.3"
+    "min": "2024.1"
   },
   "vendor": {
     "name": "Databricks",
@@ -11,7 +11,32 @@
   },
   "permission": {
     "api": {
-      "https://*": [
+      "https://*.databricks.com/": [
+        "GET",
+        "POST"
+      ],
+      "https://*.databricks.us/": [
+        "GET",
+        "POST"
+      ],
+      "https://*.azuredatabricks.net/": [
+        "GET",
+        "POST"
+      ],
+      "https://*.databricks.azure.cn/": [
+        "GET",
+        "POST"
+      ],
+      "https://*.amazonaws.com/": [
+        "GET"
+      ],
+      "https://*.windows.net/": [
+        "GET"
+      ],
+      "https://*.googleapis.com/": [
+        "GET"
+      ],
+      "https://sharing.delta.io/": [
         "GET",
         "POST"
       ]
