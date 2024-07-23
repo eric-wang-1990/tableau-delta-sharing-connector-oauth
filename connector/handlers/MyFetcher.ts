@@ -27,6 +27,7 @@ async function getTableMetadata (
     method: 'POST',
     headers: {
       ...headers,
+      'User-Agent': 'Delta-Sharing-Tableau/1.0.1',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(body)
