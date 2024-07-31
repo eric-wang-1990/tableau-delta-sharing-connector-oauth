@@ -1,6 +1,6 @@
 {
   "name": "Delta Sharing",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "tableau-version": {
     "min": "2024.1"
   },
