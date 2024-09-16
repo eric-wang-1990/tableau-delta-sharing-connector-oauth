@@ -1,0 +1,55 @@
+{
+  "name": "my-oauth-connector",
+  "displayName": "OAuth Sample Connector",
+  "version": "1.0.0",
+  "tableau-version": {
+    "min": "2023.3"
+  },
+  "vendor": {
+    "name": "vendor-name",
+    "support-link": "https://vendor-name.com",
+    "email": "support@vendor-name.com"
+  },
+  "auth": {
+    "type": "oauth2",
+    "oauth": {
+      "clientIdDesktop": "[Your client id]",
+      "clientSecretDesktop": "[Your client secret]",
+      "redirectUrisDesktop": [
+        "http://localhost:55555/Callback"
+      ],
+      "authUri": "[Your auth URI]",
+      "tokenUri": "[Your token URI]",
+      "userInfoUri": "[Your API user info URI]",
+      "scopes": [
+        "Scope 1",
+        "Scope 2"
+      ],
+      "capabilities": {
+        "OAUTH_CAP_FIXED_PORT_IN_CALLBACK_URL": true,
+        "OAUTH_CAP_CLIENT_SECRET_IN_URL_QUERY_PARAM": true,
+        "OAUTH_CAP_PKCE_REQUIRES_CODE_CHALLENGE_METHOD": true,
+        "OAUTH_CAP_REQUIRE_PKCE": true
+      },
+      "accessTokenResponseMaps": {
+        "ACCESSTOKEN": "access_token",
+        "REFRESHTOKEN": "refresh_token",
+        "access-token-issue-time": "issued_at",
+        "access-token-expires-in": "expires_in",
+        "username": "username"
+      }
+    }
+  },
+  "permission": {
+    "api": {
+      "https://*.example.com/": [
+        "GET",
+        "POST"
+      ]
+    }
+  },
+  "window": {
+    "height": 900,
+    "width": 770
+  }
+}

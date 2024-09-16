@@ -3,6 +3,7 @@ import {
   FetchOptions,
   FetchUtils,
   getAuthHeader,
+  getOAuthHeader,
   log
 } from '@tableau/taco-toolkit/handlers'
 import { Table } from '../app/utils'
@@ -28,7 +29,8 @@ async function getTableMetadata (
     headers: {
       ...headers,
       'User-Agent': 'Delta-Sharing-Tableau/1.0.1',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Custom-Header-Recipient-Id': '7ccbb5da-b1b1-4519-ae53-190db7988199'
     },
     body: JSON.stringify(body)
   })
@@ -77,12 +79,13 @@ export default class MyFetcher extends Fetcher {
     const tables: Table[] = handlerInput.data.tables
     const sqlFilters = handlerInput.data.sqlFilters
     const rowLimit = handlerInput.data.rowLimit
-
+    
     if (secrets) {
-      const bearer_token = secrets.bearer_token as string
+      const token = secrets.bearer_token as string
+
       // secrets is guaranteed to "exist" but may still not have bearer token field
 
-      const tableMetaData = await getTableMetadata(endpoint, bearer_token, tables[0].share, tables[0].schema, tables[0].name, sqlFilters, rowLimit)
+      const tableMetaData = await getTableMetadata(endpoint, token, tables[0].share, tables[0].schema, tables[0].name, sqlFilters, rowLimit)
       const dataTableUrls = getDataTableUrls(tableMetaData)
 
       const promises = dataTableUrls.map((url) => FetchUtils.loadParquetData(url))

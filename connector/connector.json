@@ -11,39 +11,43 @@
   },
   "permission": {
     "api": {
-      "https://*.databricks.com/": [
-        "GET",
-        "POST"
-      ],
-      "https://*.databricks.us/": [
-        "GET",
-        "POST"
-      ],
-      "https://*.azuredatabricks.net/": [
-        "GET",
-        "POST"
-      ],
-      "https://*.databricks.azure.cn/": [
-        "GET",
-        "POST"
-      ],
-      "https://*.amazonaws.com/": [
-        "GET"
-      ],
-      "https://*.windows.net/": [
-        "GET"
-      ],
-      "https://*.googleapis.com/": [
-        "GET"
-      ],
-      "https://sharing.delta.io/": [
+      "https://*": [
         "GET",
         "POST"
       ]
     }
   },
   "auth": {
-    "type": "custom"
+    "type": "oauth2",
+    "oauth": {
+      "clientIdDesktop": "46e2d6e9-2803-4837-8347-439d43082e0f",
+      "redirectUrisDesktop": [
+        "http://localhost:55555/Callback",
+        "http://localhost:55556/Callback",
+        "http://localhost:55557/Callback"
+      ],
+      "authUri": "https://login.microsoftonline.com/9fca8007-4338-4251-99db-4791001e3151/oauth2/v2.0/authorize",
+      "tokenUri": "https://login.microsoftonline.com/9fca8007-4338-4251-99db-4791001e3151/oauth2/v2.0/token",
+      "userInfoUri": "https://graph.microsoft.com/oidc/userinfo",
+      "scopes": [
+        "openid",
+        "email",
+        "offline_access"
+      ],
+      "capabilities": {
+        "OAUTH_CAP_FIXED_PORT_IN_CALLBACK_URL": true,
+        "OAUTH_CAP_CLIENT_SECRET_IN_URL_QUERY_PARAM": true,
+        "OAUTH_CAP_PKCE_REQUIRES_CODE_CHALLENGE_METHOD": true,
+        "OAUTH_CAP_REQUIRE_PKCE": true
+      },
+      "accessTokenResponseMaps": {
+        "ACCESSTOKEN": "access_token",
+        "REFRESHTOKEN": "refresh_token",
+        "access-token-issue-time": "issued_at",
+        "access-token-expires-in": "expires_in",
+        "username": "username"
+      }
+    }
   },
   "window": {
     "height": 800,

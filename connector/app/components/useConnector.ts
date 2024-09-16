@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import Connector, { HandlerInput, Logger, SecretsType } from '@tableau/taco-toolkit'
+import Connector, { HandlerInput, Logger, SecretsType, OAuthCredentials } from '@tableau/taco-toolkit'
 import { getDeltaShareStructure, Table } from '../utils'
 import { Node } from 'react-checkbox-tree'
 
@@ -15,6 +15,7 @@ type ConnectorState = {
   token: string
   deltaShareStructure: Node[] | undefined
   tableMap: Map<string, Table> | undefined
+  oauthCredentials: OAuthCredentials | null
 }
 
 const useConnector = () => {
@@ -30,12 +31,23 @@ const useConnector = () => {
     endpoint: '',
     token: '',
     deltaShareStructure: undefined,
-    tableMap: undefined
+    tableMap: undefined,
+    oauthCredentials: null
   })
 
+  
   const onInitializedSuccess = (_connector: Connector) => {
     Logger.info('Connector initialized.')
-    setConnectorState({ ...connectorState, isInitializing: false })
+    const oauthCredentials = _connector.oAuthCredentials;
+    const token = oauthCredentials?.accessToken ?? ''
+     // Use functional setState to update oauthCredentials and mark initialization as complete
+    setConnectorState((prevState) => ({
+      ...prevState,
+      token,
+      oauthCredentials, // Set the retrieved OAuth credentials here
+      isInitializing: false,
+    }));
+    setConnector(_connector); // Update the connector state
   }
 
   const onInitializedFailure = (_connector: Connector, error: Error) => {
@@ -50,7 +62,7 @@ const useConnector = () => {
 
     try {
       connector.handlerInputs = connectorState.handlerInputs
-      connector.secrets = connectorState.secrets
+      connector.secrets = {"bearer_token": connector.oAuthCredentials.accessToken}
       connector.submit()
     } catch (error) {
       setConnectorState({ ...connectorState, errorMessage: error.message, isSubmitting: false })

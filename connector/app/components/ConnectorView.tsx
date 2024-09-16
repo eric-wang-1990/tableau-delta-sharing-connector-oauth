@@ -1,9 +1,11 @@
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 import 'font-awesome/css/font-awesome.min.css';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import CheckboxTree from 'react-checkbox-tree'
 import useConnector from './useConnector'
 
+
+ 
 const ConnectorView = () => {
   const { 
     isSubmitting,
@@ -11,9 +13,10 @@ const ConnectorView = () => {
     isInitializing,
     hasCreds,
     deltaShareStructure,
+    oauthCredentials,
 
     handleSubmit,
-    handleCreds
+    handleCreds,
   } = useConnector()
   const [creds, setCreds] = useState({
     endpoint: '',
@@ -63,16 +66,25 @@ const ConnectorView = () => {
     handleSubmit(checked, sqlFilters, rowLimit)
   }
   const onSendCreds = () => {
-    handleCreds(creds.endpoint, creds.bearerToken)
-    setCreds({
-      endpoint: '',
-      bearerToken: '' 
-    })
+    // somehow creds.bearerToken does not contain accessToken
+    handleCreds(creds.endpoint, oauthCredentials?.accessToken ?? creds.bearerToken);
+
   }
+  
   const uniqueSelection = (selected: string[]) => {
     const diff = selected.filter(x => !checked.includes(x))
     setChecked(diff)
   }
+
+    // UseEffect to set creds.token to accessToken when available
+    useEffect(() => {
+      if (oauthCredentials?.accessToken) {
+        setCreds((prevCreds) => ({
+          ...prevCreds,
+          bearerToken: oauthCredentials.accessToken ?? '',  // Automatically set accessToken to creds.token
+        }));
+      }
+    }, [oauthCredentials]);
 
   if (isInitializing) {
     return <div className="p-3 text-muted text-center">Initializing...</div>
@@ -92,6 +104,7 @@ const ConnectorView = () => {
               <label htmlFor="endpoint" className="form-label">Endpoint URL</label>
               <input key="endpoint" name="endpoint" onChange={credsInputHandler} value={creds.endpoint} className="form-control mb-2" placeholder="https://sharing.delta.io/delta-sharing"/>
 
+     
               <label htmlFor="bearerToken" className="form-label">Bearer Token</label>
               <input key="bearerToken" name="bearerToken" onChange={credsInputHandler} value={creds.bearerToken} className="form-control mb-3" placeholder="" type="password"/>
 

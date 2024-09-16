@@ -22,7 +22,8 @@ export interface Table {
 async function getResource(connector: Connector, url: string, token: string) {
   const headers = {
     Authorization: `Bearer ${token}`,
-    'User-Agent': 'Delta-Sharing-Tableau/1.0.1' 
+    'User-Agent': 'Delta-Sharing-Tableau/1.0.1' ,
+    'Custom-Header-Recipient-Id': '7ccbb5da-b1b1-4519-ae53-190db7988199'
 }
   let resp = await connector.get(url, {
     headers: headers,
