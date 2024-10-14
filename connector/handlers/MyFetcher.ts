@@ -30,7 +30,7 @@ async function getTableMetadata (
       ...headers,
       'User-Agent': 'Delta-Sharing-Tableau/1.0.1',
       'Content-Type': 'application/json',
-      'Custom-Header-Recipient-Id': '7ccbb5da-b1b1-4519-ae53-190db7988199'
+      'Custom-Header-Recipient-Id': 'b7e4417a-1f10-4691-b197-445d3588f401'
     },
     body: JSON.stringify(body)
   })
@@ -79,13 +79,14 @@ export default class MyFetcher extends Fetcher {
     const tables: Table[] = handlerInput.data.tables
     const sqlFilters = handlerInput.data.sqlFilters
     const rowLimit = handlerInput.data.rowLimit
-    
     if (secrets) {
-      const token = secrets.bearer_token as string
-
+      // During multiple restart of the fetcher, it seems the oauth token in secrets will get lost
+      // the only remaining thing is the handlerInput
+      const token = handlerInput.data.token
       // secrets is guaranteed to "exist" but may still not have bearer token field
 
       const tableMetaData = await getTableMetadata(endpoint, token, tables[0].share, tables[0].schema, tables[0].name, sqlFilters, rowLimit)
+
       const dataTableUrls = getDataTableUrls(tableMetaData)
 
       const promises = dataTableUrls.map((url) => FetchUtils.loadParquetData(url))

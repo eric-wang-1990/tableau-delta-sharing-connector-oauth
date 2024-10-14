@@ -23,7 +23,7 @@ async function getResource(connector: Connector, url: string, token: string) {
   const headers = {
     Authorization: `Bearer ${token}`,
     'User-Agent': 'Delta-Sharing-Tableau/1.0.1' ,
-    'Custom-Header-Recipient-Id': '7ccbb5da-b1b1-4519-ae53-190db7988199'
+    'Custom-Header-Recipient-Id': 'b7e4417a-1f10-4691-b197-445d3588f401'
 }
   let resp = await connector.get(url, {
     headers: headers,

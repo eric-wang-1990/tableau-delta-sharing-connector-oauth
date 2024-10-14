@@ -3,6 +3,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import React, { useState, useEffect } from 'react'
 import CheckboxTree from 'react-checkbox-tree'
 import useConnector from './useConnector'
+import { Logger } from '@tableau/taco-toolkit';
 
 
  
@@ -66,8 +67,7 @@ const ConnectorView = () => {
     handleSubmit(checked, sqlFilters, rowLimit)
   }
   const onSendCreds = () => {
-    // somehow creds.bearerToken does not contain accessToken
-    handleCreds(creds.endpoint, oauthCredentials?.accessToken ?? creds.bearerToken);
+    handleCreds(creds.endpoint, creds.bearerToken);
 
   }
   

@@ -61,8 +61,10 @@ const useConnector = () => {
     }
 
     try {
+      const serializedCreds = JSON.stringify(connectorState.secrets, null, 2); 
+      Logger.info("Sending userConnector creds:" + serializedCreds)
       connector.handlerInputs = connectorState.handlerInputs
-      connector.secrets = {"bearer_token": connector.oAuthCredentials.accessToken}
+      connector.secrets = connectorState.secrets
       connector.submit()
     } catch (error) {
       setConnectorState({ ...connectorState, errorMessage: error.message, isSubmitting: false })
@@ -84,7 +86,8 @@ const useConnector = () => {
             endpoint : connectorState.endpoint, // corresponding endpoint
             tables : tables.map((name: string) => connectorState.tableMap?.get(name)),
             sqlFilters : sqlFilters.length > 0 ? sqlFilters : null,
-            rowLimit : rowLimit ? parseInt(rowLimit) : null
+            rowLimit : rowLimit ? parseInt(rowLimit) : null,
+            token : connectorState.token
         },
       }
   })
