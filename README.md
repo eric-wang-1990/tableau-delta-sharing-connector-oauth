@@ -6,7 +6,9 @@ The connector is built with the Tableau Web Data Connector 3.0 SDK and provides:
 - OAuth Authentication
 
 ## Prerequisite
-- Python 3.7 or higher
+- [Python 3.7 or higher](https://www.python.org/downloads/)
+- [JDK 11 or higher](https://www.oracle.com/java/technologies/downloads/)
+- [Tableau Desktop 2024.1 or later](https://www.tableau.com/support/releases/desktop/2024.1)
 - Install [taco-toolkit](https://help.tableau.com/current/api/webdataconnector/en-us/index.html): `npm install -g @tableau/taco-toolkit@tableau-2024.1`
 
 ## Local Test
